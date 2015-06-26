@@ -8,21 +8,21 @@ import com.md.frequencytable.*;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        Options options = new Options();
-        options.addOption("q", false, "Suppress extra output");
-        options.addOption("t", true, "Number of threads");
-        options.addOption("f", true, "File path to read from");
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse(options, args);
+        Arguments arguments = null;
+        try {
+            arguments = new Arguments(args);
+        } catch(ParseException e) {
+            System.out.println("Invalid arguments!");
+            return;
+        }
 
-        int numberOfThreads = Integer.parseInt(cmd.getOptionValue("t"));
-        String filepath = cmd.getOptionValue("f");
+        File file = new File(arguments.filepath());
 
-        File file = new File(filepath);
-        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
-        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+        ExecutorService executor = Executors.newFixedThreadPool(arguments.numberOfThreads());
+
         long start = Calendar.getInstance().getTimeInMillis();
-        Collection<Future<Map<Character, Long>>> frequencyTables = executor.invokeAll(buildCallables(file, numberOfThreads));
+
+        Collection<Future<Map<Character, Long>>> frequencyTables = executor.invokeAll(buildCallables(file, arguments.numberOfThreads()));
 
         Map<Character, Long> accumulatedFrequencyTable = new HashMap<Character, Long>();
         for(Future<Map<Character, Long>> frequencyTableFuture : frequencyTables) {
