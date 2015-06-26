@@ -23,7 +23,9 @@ public class App {
         long end = Calendar.getInstance().getTimeInMillis();
 
         System.out.println("Time taken: " + ((end - start) / 100));
-        printFrequencyTable(accumulatedFrequencyTable);
+        if (!arguments.isQuiet()) {
+            printFrequencyTable(accumulatedFrequencyTable);
+        }
     }
 
 

@@ -18,6 +18,7 @@ public class Arguments {
 
         this.numberOfThreads = Integer.parseInt(cmd.getOptionValue("t"));
         this.filepath = cmd.getOptionValue("f");
+        this.isQuiet = cmd.hasOption("q");
     }
 
     public boolean isQuiet() {
